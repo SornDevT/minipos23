@@ -1,0 +1,53 @@
+
+
+All Table DB
+
+    1. Table: Product (Model)
+        Fill name            Data Type
+        - name               string      =  ຊື່ສິນຄ້າ
+        - category_id        integer     =  id ໝວດໝູ່ສິນຄ້າ
+        - image              string      =  ຊື່ຮູບພາບ
+        - qty                integer     =  ຈຳນວນ ສິນຄ້າ
+        - price_buy          integer     =  ລາຄາຊື້
+        - price_sell         integer     =  ລາຄາຂາຍ
+
+
+    2. Table: Transection (Model)
+        Fill name            Data Type
+        - tran_id            string     = ລະຫັດທຸລະກຳ
+        - tran_type          string     = ປະເພດທຸລະກຳ (ຮັບ/ຈ່າຍ) income/expense
+        - product_id         integer    = ລະຫັດສິນຄ້າ
+        - qty                integer    = ຈຳນວນ ສິນຄ້າ 
+        - price              integer    = ລາຄາສິນຄ້າ
+        - detail             string     = ລາຍລະອຽດຂອງທຸລະກຳ
+
+    3. Table: User (Model) 
+        Fill name            Data Type
+        - name               string     = ຊື່ຜູ້ໃຊ່  
+        - email              string     = ອີເມວຜູ້ໃຊ້ 
+        - password           string     = ລະຫັດຜ່ານຜູ້ໃຊ້
+
+    4. Table: Bill (Model) 
+        Fill name            Data Type
+        - bill_id            string     = ເລກທີ່ໃບບິນ
+        - customer_name      string     = ຊື່ລູກຄ້າ
+        - customer_tel       string     = ເບີໂທລູກຄ້າ
+
+    5. Table: Bill_list (Model)
+        Fill name            Data Type
+        - bill_id            string     = ເລກທີ່ໃບບິນ
+        - name               string     = ລາຍການໃບບິນ
+        - qty                integer    = ຈຳນວນສິນຄ້າ
+        - price              integer    = ລາຄາສິນຄ້າ 
+
+    6. Table: Category (Model)
+         Fill name            Data Type
+         - name                 string  = ຊື່ໝວດໝູ່ ສິນຄ້າ
+
+All Controller 
+
+    - ProductController     = ຈັດການຂໍ້ມູນສິນຄ້າ 
+    - UserController        = ຈັດການຂໍ້ມູນຜູ້ໃຊ້
+    - TransectionController = ຈັດການ ຂໍ້ມູນທຸລະກຳ 
+    - BillController        = ຈັດການຂໍ້ມູນໃບບິນ    
+    - ReportController      = ຈັດການກ່ຽວກັບລາຍງານ
