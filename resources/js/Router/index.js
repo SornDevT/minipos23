@@ -6,9 +6,21 @@ import Pos from "../Pages/Pos.vue";
 import Transection from "../Pages/Transection.vue";
 import Report from "../Pages/Report.vue";
 import Page404 from "../Pages/Page404.vue";
+import Login from "../Pages/Login.vue";
+import Register from "../Pages/Register.vue";
 
 
 const routes = [
+    {
+        name: 'login',
+        path: '/login',
+        component: Login
+    },
+    {
+        name: 'register',
+        path: '/register',
+        component: Register
+    },
     {
         path:'/',
         redirect:'/store'
