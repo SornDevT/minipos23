@@ -9,6 +9,29 @@ import Page404 from "../Pages/Page404.vue";
 import Login from "../Pages/Login.vue";
 import Register from "../Pages/Register.vue";
 
+import { useStore } from "../Store/Auth";
+
+// ສ້າງ middleware 
+const AuthMiddleware = (to, from, next) => {
+    
+    // ດຶງ token ຈາກ localStorage
+    const user = localStorage.getItem('web_user'); 
+    const token = localStorage.getItem('web_token');
+    const store = useStore();
+
+    if(token){
+        store.setToken(token);
+        store.setUser(user);
+        next();
+    } else {
+        next({
+            path: '/login',
+            replace: true,
+        });
+    }
+};
+
+
 
 const routes = [
     {
@@ -23,32 +46,48 @@ const routes = [
     },
     {
         path:'/',
-        redirect:'/store'
+        redirect:'/store',
+        
     },
     {
         name: 'store',
         path: '/store',
-        component: Store
+        component: Store,
+        meta:{
+            middleware: [AuthMiddleware]
+        }
     },
     {
         name: 'category',
         path: '/category',
-        component: Category
+        component: Category,
+        meta:{
+            middleware: [AuthMiddleware]
+        }
     },
     {
         name: 'pos',
         path: '/pos',
-        component: Pos
+        component: Pos,
+        meta:{
+            middleware: [AuthMiddleware]
+        }
     },
     {
         name: 'transection',
         path: '/transection',
-        component: Transection
+        component: Transection,
+        meta:{
+            middleware: [AuthMiddleware]
+        }
     },
     {
         name: 'report',
         path: '/report',
-        component: Report
+        component: Report,
+        meta:{
+            middleware: [AuthMiddleware]
+        }
     },
     {
         name: 'Page_404',
@@ -64,5 +103,32 @@ const router = createRouter({
         return { to:0 }
     }
 });
+
+
+
+router.beforeEach((to, from, next) => {
+    // ສ້າງ middleware ສໍາລັບການເຂົ້າໄປສູ່ໜ້າທີ່
+    const token = localStorage.getItem('web_token');
+
+    if (to.meta.middleware) {
+       to.meta.middleware.forEach(middleware => {
+            middleware(to, from, next);
+        });
+    } else {
+        if(to.path === '/login' || to.path === '/'){
+            if(token){
+                next({
+                    path: '/store',
+                    replace: true,
+                });
+            } else {
+                next();
+            }
+        } else {
+            next();
+        }
+    }
+});
+
 
 export default router;

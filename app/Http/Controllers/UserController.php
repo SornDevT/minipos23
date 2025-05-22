@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use JWTAuth;
+use Illuminate\Support\Facades\Auth;
 use App\Models\User; // Assuming you have a User model
 
 class UserController extends Controller
@@ -32,5 +34,46 @@ class UserController extends Controller
         ];
 
         return response()->json($response, 201);
+    }
+
+    public function login(Request $request)
+    {
+        $user_login = [
+            'email' => $request->email,
+            'password' => $request->password,
+        ];
+
+        $token = JWTAuth::attempt($user_login);
+        $user = Auth::user();
+
+       if($token){
+            return response()->json([
+                'success' => true,
+                'message' => 'Login successful',
+                'token' => $token,
+                'user' => $user
+            ]);
+        }else{
+            return response()->json([
+                'success' => false,
+                'message' => 'ອີເມວ ຫຼື ລະຫັດຜ່ານບໍ່ຖືກ',
+            ]);
+        }
+    }
+
+    public function logout()
+    {
+        $token = JWTAuth::getToken();
+        if ($token) {
+            JWTAuth::invalidate($token);
+            return response()->json([
+                'success' => true
+                ], 200);
+        } else {
+            return response()->json([
+                'success' => false,
+                'message' => 'Token not found'
+            ], 401);
+        }
     }
 }

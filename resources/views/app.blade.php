@@ -40,7 +40,7 @@
 
     <!-- Main JS -->
     
-      <script src="{{ url('assets/js/main.js') }}"></script>
+      <!-- <script src="{{ url('assets/js/main.js') }}"></script> -->
 
 
 </body>
