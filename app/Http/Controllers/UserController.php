@@ -43,6 +43,15 @@ class UserController extends Controller
             'password' => $request->password,
         ];
 
+        // check remember me
+        if ($request->remember) {
+            // set time 
+            JWTAuth::factory()->setTTL(60*24*7); // 7 days
+            // JWTAuth::factory()->setTTL(1); // 7 days
+        }
+
+
+
         $token = JWTAuth::attempt($user_login);
         $user = Auth::user();
 
