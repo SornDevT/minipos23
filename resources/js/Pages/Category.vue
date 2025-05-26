@@ -115,6 +115,25 @@ export default {
 
             }).catch(error => {
                 console.log(error);
+                if(error && error.response && error.response.status === 401) {
+                    
+                    this.$swal({
+                        title: "Token ໝົດອາຍຸ!",
+                        text: "ກະລຸນາ Login ໃໝ່ອີກຄັ້ງ!",
+                        icon: "error",
+                        // showConfirmButton: false,
+                        // timer: 3500,
+                    }).then(() => {
+                        console.log('Redirecting to login page...');
+                        // clear token
+                        this.store.logOut();
+                        // clear local storage
+                        localStorage.removeItem('web_token');
+                        localStorage.removeItem('web_user');
+                        // redirect to login page
+                        this.$router.push('/login');
+                    });
+                }
             });
 
       
@@ -154,6 +173,25 @@ export default {
                     }
                 }).catch(error => {
                     console.log(error);
+                    if(error && error.response && error.response.status === 401) {
+                    
+                    this.$swal({
+                        title: "Token ໝົດອາຍຸ!",
+                        text: "ກະລຸນາ Login ໃໝ່ອີກຄັ້ງ!",
+                        icon: "error",
+                        // showConfirmButton: false,
+                        // timer: 3500,
+                    }).then(() => {
+                        console.log('Redirecting to login page...');
+                        // clear token
+                        this.store.logOut();
+                        // clear local storage
+                        localStorage.removeItem('web_token');
+                        localStorage.removeItem('web_user');
+                        // redirect to login page
+                        this.$router.push('/login');
+                    });
+                }
                 });
                
             }else{
@@ -191,6 +229,27 @@ export default {
                     }
                 }).catch(error => {
                     console.log(error);
+
+                    if(error && error.response && error.response.status === 401) {
+                    
+                    this.$swal({
+                        title: "Token ໝົດອາຍຸ!",
+                        text: "ກະລຸນາ Login ໃໝ່ອີກຄັ້ງ!",
+                        icon: "error",
+                        // showConfirmButton: false,
+                        // timer: 3500,
+                    }).then(() => {
+                        console.log('Redirecting to login page...');
+                        // clear token
+                        this.store.logOut();
+                        // clear local storage
+                        localStorage.removeItem('web_token');
+                        localStorage.removeItem('web_user');
+                        // redirect to login page
+                        this.$router.push('/login');
+                    });
+                }
+
                 });
             }
         },
@@ -237,6 +296,25 @@ export default {
                             }
                         }).catch(error => {
                             console.log(error);
+                            if(error && error.response && error.response.status === 401) {
+                    
+                    this.$swal({
+                        title: "Token ໝົດອາຍຸ!",
+                        text: "ກະລຸນາ Login ໃໝ່ອີກຄັ້ງ!",
+                        icon: "error",
+                        // showConfirmButton: false,
+                        // timer: 3500,
+                    }).then(() => {
+                        console.log('Redirecting to login page...');
+                        // clear token
+                        this.store.logOut();
+                        // clear local storage
+                        localStorage.removeItem('web_token');
+                        localStorage.removeItem('web_user');
+                        // redirect to login page
+                        this.$router.push('/login');
+                    });
+                }
                         });
                 }
                 });
@@ -249,7 +327,28 @@ export default {
             axios.get('/api/category', { headers:{ Authorization: 'Bearer ' + this.store.getToken } }).then(response => {
                 this.CategoryData = response.data;
             }).catch(error => {
-                console.log(error);
+                // console.log(error);
+                // console.log(error.response.status)
+                if(error && error.response && error.response.status === 401) {
+                    
+                    this.$swal({
+                        title: "Token ໝົດອາຍຸ!",
+                        text: "ກະລຸນາ Login ໃໝ່ອີກຄັ້ງ!",
+                        icon: "error",
+                        // showConfirmButton: false,
+                        // timer: 3500,
+                    }).then(() => {
+                        console.log('Redirecting to login page...');
+                        // clear token
+                        this.store.logOut();
+                        // clear local storage
+                        localStorage.removeItem('web_token');
+                        localStorage.removeItem('web_user');
+                        // redirect to login page
+                        this.$router.push('/login');
+                    });
+                }
+
             });
         },
 
