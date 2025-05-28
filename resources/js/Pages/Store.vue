@@ -6,7 +6,16 @@
 
         <div class="row" v-if="ShowForm"> 
           <!-- {{FormProduct}} -->
-              <div class="col-md-4">Image</div>
+              <div class="col-md-4 relative">
+                    <button type="button" class="btn rounded-pill btn-icon btn-danger bimg" v-if="FormProduct.image" @click="ClearImage()">
+                            <i class='bx bx-x-circle fs-4'></i>
+                    </button>
+
+                <img :src="imagePreview" @click="$refs.imageupload.click()"  class="img-fluid mb-4 cursor-pointer" >
+
+                <input type="file" ref="imageupload" class="form-control mb-4" style=" display:none" id="product_image" accept="image/*" @change="onFileChange">    
+
+              </div>
               <div class="col-md-8">
 
                   <div class="row">
@@ -72,14 +81,16 @@
         <div class="row"> 
             <div class="col-lg-6 d-flex mb-2 align-items-center">
 
-                <span class="me-2">
-                    <i class='bx bx-sort-down fs-4'></i>
+                <span class="me-2 cursor-pointer" @click="Sort = Sort === 'asc' ? 'desc' : 'asc'">
+                    <i class='bx bx-sort-down fs-4' v-if="Sort=='desc'"></i>
+                    <i class='bx bx-sort-up fs-4' v-if="Sort=='asc'"></i>
                 </span>
 
-                <select class="form-select w-auto me-2" >
-                <option value="10">10</option>
-                <option value="20">20</option>
-                <option value="30">30</option>
+                <select class="form-select w-auto me-2" v-model="PerPage" >
+                    <option value="5">5</option>
+                    <option value="10">10</option>
+                    <option value="20">20</option>
+                    <option value="30">30</option>
                 </select>
 
                 <select class="form-select w-auto" v-model="SelectCategory" >
@@ -91,8 +102,8 @@
             <div class="col-lg-6 mb-2 d-flex justify-content-end">
 
                 <div class="input-group w-auto me-2">
-                    <input type="text" class="form-control" placeholder="ຄົ້ນຫາ...." >
-                    <button class="btn btn-primary px-3" type="button"><i class='bx bx-search-alt'></i></button>
+                    <input type="text" class="form-control" v-model="Search" placeholder="ຄົ້ນຫາ...." @keyup.enter="GetProduct()" >
+                    <button class="btn btn-primary px-3" type="button" @click="GetProduct()" ><i class='bx bx-search-alt'></i></button>
                 </div>
                 <button type="button" class="btn btn-info" @click="AddProduct()" >ເພີ່ມໃໝ່</button>
             </div>
@@ -115,7 +126,11 @@
             <tr v-for="item in ProductData.data" :key="item.id">
               <td>{{ item.id }}</td>
               <td>
-                <!-- <img :src="item.image" class="rounded-circle" width="50" height="50" alt="Product Image"> -->
+                <div class=" d-flex justify-content-center align-items-center">
+                    <img v-if="item.image" :src="url + '/assets/img/products/' + item.image" class="img-fluid rounded border" style="width: 50px; height: 50px;" />
+                    
+                    <img v-else :src="url + '/assets/img/no-image.jpg'" class="img-fluid rounded border" style="width: 50px; height: 50px;" />
+                    </div>
               </td>
               <td>{{ item.name }}</td>
               <td>{{ item.category_name }}</td>
@@ -154,6 +169,11 @@ export default {
     },
     data(){
         return {
+            url: window.location.origin,
+            imagePreview: window.location.origin + '/assets/img/img-upload.jpg',
+            Search: '',
+            Sort:'asc',
+            PerPage: 5,
             ShowForm: false,
             FormType: true,
             EditID:'',
@@ -165,6 +185,7 @@ export default {
             FormProduct: {
                 name: '',
                 category_id: '',
+                image:'',
                 qty: '',
                 price_buy: '',
                 price_sell: '',
@@ -192,6 +213,26 @@ export default {
         }
     },
     methods:{
+        ClearImage(){
+            // clear image
+            this.FormProduct.image = '';
+            this.imagePreview = window.location.origin + '/assets/img/img-upload.jpg';
+            this.$refs.imageupload.value = ''; // reset file input
+        },
+        onFileChange(e){
+            console.log(e);
+            const file = e.target.files[0];
+            this.FormProduct.image = file;
+            if(file) {
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    this.imagePreview = e.target.result;
+                };
+                reader.readAsDataURL(file);
+            } else {
+                this.imagePreview = window.location.origin + '/assets/img/img-upload.jpg';
+            }
+        },
       formatPrice(value) {
             let val = (value / 1).toFixed(0).replace(",", ".");
             return val.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
@@ -206,10 +247,13 @@ export default {
             this.FormProduct = {
                 name: '',
                 category_id: '',
+                image: '',
                 qty: '',
                 price_buy: '',
                 price_sell: '',
             };
+
+            this.imagePreview = window.location.origin + '/assets/img/img-upload.jpg';
 
             // select first category
             if(this.CategoryData.length > 0) {
@@ -232,6 +276,13 @@ export default {
                 if(response.data.success) {
                     this.ShowForm = true;
                     this.FormProduct = response.data.product;
+                    // check if image is available
+                    if(this.FormProduct.image) {
+                        this.imagePreview = this.url + '/assets/img/products/' + this.FormProduct.image;
+                    } else {
+                        this.imagePreview = this.url + '/assets/img/no-image.jpg';
+                    }
+
                 } else {
                     // show error message
                     this.$swal({
@@ -269,7 +320,7 @@ export default {
             // save product
             if(this.FormType) {
                 // add product
-                axios.post('/api/product/add', this.FormProduct, { headers:{ Authorization: 'Bearer ' + this.store.getToken } }).then(response => {
+                axios.post('/api/product/add', this.FormProduct, { headers:{ "Content-Type":"multipart/form-data" , Authorization: 'Bearer ' + this.store.getToken } }).then(response => {
 
                     if(response.data.success){
                         this.$swal({
@@ -320,7 +371,7 @@ export default {
 
             } else {
                 // update product
-                axios.post('/api/product/update/' + this.EditID, this.FormProduct, { headers:{ Authorization: 'Bearer ' + this.store.getToken } }).then(response => {
+                axios.post('/api/product/update/' + this.EditID, this.FormProduct, {  headers:{ "Content-Type":"multipart/form-data" , Authorization: 'Bearer ' + this.store.getToken } }).then(response => {
 
                     if(response.data.success){
                         this.$swal({
@@ -463,7 +514,7 @@ export default {
         GetProduct(page = 1){
 
             // get product
-            axios.get(`/api/product?page=${page}`, { headers:{ Authorization: 'Bearer ' + this.store.getToken } }).then(response => {
+            axios.get(`/api/product?page=${page}&sort=${this.Sort}&perpage=${this.PerPage}&category_id=${this.SelectCategory}&search=${this.Search}`, { headers:{ Authorization: 'Bearer ' + this.store.getToken } }).then(response => {
                 this.ProductData = response.data;
             }).catch(error => {
                 console.log(error);
@@ -490,6 +541,23 @@ export default {
 
         }
     },
+    watch:{
+        // Sort 
+        Sort() {
+            this.GetProduct();
+        },
+        PerPage() {
+            this.GetProduct();
+        },
+        SelectCategory() {
+            this.GetProduct();
+        },
+        Search(val) {
+            if(val.length === 0) {
+                this.GetProduct();
+            }
+        }
+    },
     created() {
         // Fetch initial data
         this.GetCategory();
@@ -497,6 +565,10 @@ export default {
     },
 }
 </script>
-<style lang="">
-    
+<style >
+    .bimg {
+        position: absolute;
+    right: 15px;
+    top: 10px;
+    }
 </style>
