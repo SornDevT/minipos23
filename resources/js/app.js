@@ -13,8 +13,12 @@ import 'sweetalert2/dist/sweetalert2.min.css';
 import Cleave from 'vue-cleave-component';
 import Pagination from './Components/Pagination.vue'
 
+import { PerfectScrollbarPlugin } from 'vue3-perfect-scrollbar';
+import 'vue3-perfect-scrollbar/style.css';
+
 
 const app = createApp(App);
+app.use(PerfectScrollbarPlugin);
 app.component('Pagination', Pagination);
 app.use(Cleave);
 app.use(VueSweetalert2);

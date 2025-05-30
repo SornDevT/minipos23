@@ -178,9 +178,9 @@ export default {
             FormType: true,
             EditID:'',
             CategoryData: [],
-            ProductData:[{
+            ProductData:{
               data: [],
-            }],
+            },
             SelectCategory: 'all',
             FormProduct: {
                 name: '',
