@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->string('bill_id');
             $table->string('customer_name')->nullable();
-            $table->string('customer_tel')->nullabble();
+            $table->string('customer_tel')->nullable();
             $table->timestamps();
         });
     }

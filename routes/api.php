@@ -5,6 +5,8 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\ProductController;
+use App\Http\Controllers\TransectionController;
+use App\Http\Controllers\BillController;
 
 // Route::get('/user', function (Request $request) {
 //     return $request->user();
@@ -33,4 +35,18 @@ Route::group(['middleware' => 'auth:api'], function () {
     Route::get('/product/edit/{id}', [ProductController::class, 'edit']);
     Route::post('/product/update/{id}', [ProductController::class, 'update']);
     Route::delete('/product/delete/{id}', [ProductController::class, 'delete']);
+});
+
+// create route group for TransectionController crud
+Route::group(['middleware' => 'auth:api'], function () {
+    Route::get('/transection', [TransectionController::class, 'index']);
+    Route::post('/transection/add', [TransectionController::class, 'add']);
+    // Route::get('/transection/edit/{id}', [TransectionController::class, 'edit']);
+    // Route::post('/transection/update/{id}', [TransectionController::class, 'update']);
+    // Route::delete('/transection/delete/{id}', [TransectionController::class, 'delete']);
+});
+
+// create route group for print bill
+Route::group(['middleware' => 'auth:api'], function () {
+    Route::get('/bill/print/{id}', [BillController::class, 'print_bill']);
 });

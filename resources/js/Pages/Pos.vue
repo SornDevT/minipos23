@@ -43,9 +43,9 @@
                 <div class="card-body p-0">
                     <div class="p-3">
                         <label>ຊື່ລູກຄ້າ:</label>
-                        <input type="text" class="form-control mb-2" placeholder="ຊື່ລູກຄ້າ" >
+                        <input type="text" class="form-control mb-2" v-model="customer_name" placeholder="ຊື່ລູກຄ້າ" >
                         <label>ເບີໂທ:</label>
-                        <input type="text" class="form-control mb-2" placeholder="ເບີໂທ" >
+                        <input type="text" class="form-control mb-2" v-model="customer_tel" placeholder="ເບີໂທ" >
                     </div>
                     <div class=" p-3 bg-info text-white text-center">
                         ລາຍການສັ່ງຊື້
@@ -83,11 +83,87 @@
                         <span>{{ formatPrice(TotalPrice) }}</span>
                     </div>
                     <diV class="p-2">
-                        <button type="button" class="btn rounded-pill btn-success w-100">ຊຳລະເງີນ</button>
+                        <button type="button" class="btn rounded-pill btn-success w-100" @click="showConfirm()" >ຊຳລະເງີນ</button>
                     </diV>
                 </div>
             </div>
         </div>
+
+
+            <div class="modal fade" id="sh_showconfirm" data-bs-backdrop="static" tabindex="-1" style="display: none;" aria-hidden="true">
+                  <div class="modal-dialog">
+                    <div class="modal-content">
+                      <div class="modal-header">
+                        <h5 class="modal-title" id="backDropModalTitle">ການຊຳລະເງິນ</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                      </div>
+                      <div class="modal-body">
+                        <div class="row">
+                        <div class="col-md-6">
+                            <div class=" d-flex justify-content-between">
+                                <span>ລວມຍອດເງິນ:</span>
+                                <span>{{ formatPrice(TotalPrice) }} ກີບ</span>
+                            </div>
+                            <div class=" d-flex justify-content-between text-danger" v-if="(CashAmount-TotalPrice)>0">
+                                <span>ເງິນທອນ:</span>
+                                <span>{{ formatPrice(CashAmount-TotalPrice) }} ກີບ</span>
+                            </div>
+                        </div>
+                        <div class="col-md-6 text-end">
+                            <label>ຮັບເງິນນຳລູກຄ້າ</label>
+                            <cleave :options="options" v-model="CashAmount" class=" form-control text-end" />
+                            <div class="row mt-2">
+                                <div class="col-md-6">
+                                    <!-- <button type="button" class=" btn btn-primary w-100" @click="AddNum(500)" >500</button> -->
+                                </div>
+                                <div class="col-md-6">
+                                    <button type="button" class=" btn btn-danger w-100"  @click="CashAmount = TotalPrice">{{formatPrice(TotalPrice)}}</button>
+                                </div>
+                            </div>
+                            <div class="row mt-2">
+                                <div class="col-md-6">
+                                    <button type="button" class=" btn btn-primary w-100" @click="AddNum(500)" >500</button>
+                                </div>
+                                <div class="col-md-6">
+                                    <button type="button" class=" btn btn-primary w-100"  @click="AddNum(1000)">1,000</button>
+                                </div>
+                            </div>
+                            <div class="row mt-2">
+                                <div class="col-md-6">
+                                    <button type="button" class=" btn btn-primary w-100"  @click="AddNum(2000)" >2,000</button>
+                                </div>
+                                <div class="col-md-6">
+                                    <button type="button" class=" btn btn-primary w-100"  @click="AddNum(5000)">5,000</button>
+                                </div>
+                            </div>
+                            <div class="row mt-2">
+                                <div class="col-md-6">
+                                    <button type="button" class=" btn btn-primary w-100"  @click="AddNum(10000)">10,000</button>
+                                </div>
+                                <div class="col-md-6">
+                                    <button type="button" class=" btn btn-primary w-100"  @click="AddNum(20000)" >20,000</button>
+                                </div>
+                            </div>
+                            <div class="row mt-2">
+                                <div class="col-md-6">
+                                    <button type="button" class=" btn btn-primary w-100"  @click="AddNum(50000)">50,000</button>
+                                </div>
+                                <div class="col-md-6">
+                                    <button type="button" class=" btn btn-primary w-100"  @click="AddNum(100000)" >100,000</button>
+                                </div>
+                            </div>
+                        </div>
+                  </div>
+                </div>
+                      <div class="modal-footer">
+                         <button type="button" class="btn btn-primary me-2" :disabled="CheckBTPay" @click="Confirm_Pay()" >ບັນທຶກ</button>
+                  <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">ປິດ</button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+
     </div>
 </template>
 <script>
@@ -110,9 +186,26 @@ export default {
             },
             SelectCategory: 'all',
             ListOrder: [],
+            CashAmount: 0,
+            options: {
+                  numeral: true,
+                  numeralPositiveOnly: true,
+                  noImmediatePrefix: true,
+                  rawValueTrimPrefix: true,
+                  numeralIntegerScale: 10,
+                  numeralDecimalScale: 2,
+                  numeralDecimalMark: '.',
+                  delimiter: ','
+                },
+            customer_name: '',
+            customer_tel: '',
         }
     },
     computed: {
+        CheckBTPay() {
+            // check if CashAmount is less than TotalPrice
+            return parseInt(this.CashAmount) < parseInt(this.TotalPrice);
+        },
         // sum of all items in ListOrder
         TotalPrice() {
             return this.ListOrder.reduce((total, item) => {
@@ -121,6 +214,89 @@ export default {
         },
     },
     methods:{
+        async openLink(link){
+            const response = await fetch(`${link}`,{ headers:{ Authorization: 'Bearer '+ this.store.getToken}});
+            const html = await response.text();
+            const blob = new Blob([html],{ type: "text/html"});
+            const blobUrl = URL.createObjectURL(blob);
+            window.open(blobUrl, "_blank");
+        },
+        Confirm_Pay(){
+
+            axios.post('/api/transection/add',{
+                customer_name: this.customer_name,
+                customer_tel: this.customer_tel,
+                listorder: this.ListOrder,
+            }, { headers:{ Authorization: 'Bearer ' + this.store.getToken } }).then(response => {
+                
+                $('#sh_showconfirm').modal('hide');
+
+                if(response.data.success){
+                    // clear list order
+                    this.ListOrder = [];
+                    // clear customer name and tel
+                    this.customer_name = '';
+                    this.customer_tel = '';
+                    // clear cash amount
+                    this.CashAmount = 0;
+                    // show success message
+                    this.$swal({
+                            title: response.data.message,
+                            icon: "success",
+                            showConfirmButton: false,
+                            timer: 2500,
+                            toast: true,
+                            position: 'top-end',
+                        });
+
+                    // print receipt
+                    // window.open('api/bill/print/'+response.data.bill_id, '_blank');
+                    this.openLink('api/bill/print/'+response.data.bill_id);
+
+                    // get product again
+                    this.GetProduct();
+                
+                } else {
+                    this.$swal({
+                            title: "ຜິດຜາດ!",
+                            text: response.data.message,
+                            icon: "error",
+                            showConfirmButton: false,
+                            timer: 3500,
+                        });
+                }
+                
+            }).catch(error => {
+                console.log(error);
+                if(error && error.response && error.response.status === 401) {
+                    
+                    this.$swal({
+                        title: "Token ໝົດອາຍຸ!",
+                        text: "ກະລຸນາ Login ໃໝ່ອີກຄັ້ງ!",
+                        icon: "error",
+                        // showConfirmButton: false,
+                        // timer: 3500,
+                    }).then(() => {
+                        console.log('Redirecting to login page...');
+                        // clear token
+                        this.store.logOut();
+                        // clear local storage
+                        localStorage.removeItem('web_token');
+                        localStorage.removeItem('web_user');
+                        // redirect to login page
+                        this.$router.push('/login');
+                    });
+                }
+            });
+
+        },
+        AddNum(num){
+            this.CashAmount = parseInt(this.CashAmount?this.CashAmount:0) + parseInt(num);
+        },
+        showConfirm(){
+            this.CashAmount = 0;
+            $('#sh_showconfirm').modal('show');
+        },
         // limit word 
         limitWord(text, limit = 15) {
             if (text.length > limit) {

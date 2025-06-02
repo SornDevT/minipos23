@@ -23,10 +23,13 @@
 
             </div>
               <div class="mb-6 form-password-toggle form-control-validation fv-plugins-icon-container">
-                <label class="form-label"  for="password">ລະຫັດຜ່ານ:</label> {{inputPasswordType}}
+                <label class="form-label"  for="password">ລະຫັດຜ່ານ:</label> 
                 <div class="input-group">
                   <input :type="inputPasswordType" v-model="password"  class="form-control" id="password" placeholder="············" >
-                  <span @click="inputPasswordType=='password'?inputPasswordType='text':inputPasswordType='password'" class="input-group-text cursor-pointer"><i class="icon-base bx bx-show"></i></span>
+                  <span @click="inputPasswordType=='password'?inputPasswordType='text':inputPasswordType='password'" class="input-group-text cursor-pointer">
+                    <i class="icon-base bx bx-show" v-if="inputPasswordType=='text'"></i>
+                    <i class='icon-base bx bx-hide' v-if="inputPasswordType=='password'" ></i>
+                    </span>
                 </div>
 
               
