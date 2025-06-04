@@ -7,6 +7,7 @@ use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\TransectionController;
 use App\Http\Controllers\BillController;
+use App\Http\Controllers\ReportController;
 
 // Route::get('/user', function (Request $request) {
 //     return $request->user();
@@ -49,4 +50,9 @@ Route::group(['middleware' => 'auth:api'], function () {
 // create route group for print bill
 Route::group(['middleware' => 'auth:api'], function () {
     Route::get('/bill/print/{id}', [BillController::class, 'print_bill']);
+});
+
+// create route group for ReportController
+Route::group(['middleware' => 'auth:api'], function () {
+    Route::get('/report', [ReportController::class, 'index']);
 });

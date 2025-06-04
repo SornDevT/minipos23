@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Product; // Assuming you have a Product model
+use App\Models\Transection;
 
 class ProductController extends Controller
 {
@@ -68,6 +69,18 @@ class ProductController extends Controller
             $product->price_buy = $request->price_buy;
             $product->price_sell = $request->price_sell;
             $product->save();
+
+            // add transaction
+            $tran_id = 'TRN' . date('YmdHis') . rand(100, 999);
+
+                    $transection = new Transection();
+                    $transection->tran_id = $tran_id;
+                    $transection->tran_type = 'expense';
+                    $transection->product_id = $product->id;
+                    $transection->qty = $request->qty;
+                    $transection->price = $request->price_buy*$request->qty;
+                    $transection->detail = $product->name;
+                    $transection->save();
 
             $success = true;
             $message = 'ເພີ່ມຂໍ້ມູນສຳເລັດ';

@@ -153,7 +153,7 @@
                 </tr>
             </tbody>
         </table>
-        <Pagination :pagination="ProductData" :offset="4" @paginate="GetProduct($event)" />
+        <Pagination :pagination="ProductData" :offset="4" @paginate="GetTran($event)" />
       </div>
     </div>
 
@@ -172,8 +172,8 @@ export default {
             url: window.location.origin,
             imagePreview: window.location.origin + '/assets/img/img-upload.jpg',
             Search: '',
-            Sort:'asc',
-            PerPage: 5,
+            Sort:'desc',
+            PerPage: 10,
             ShowForm: false,
             FormType: true,
             EditID:'',
