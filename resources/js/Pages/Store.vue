@@ -1,6 +1,6 @@
 <template lang="">
     <div class="card">
-    <h5 class="card-header">ລາຍການສິນຄ້າທັງໝົດ</h5>
+    <h5 class="card-header">ລາຍການສິນຄ້າທັງໝົດ --------- update Store</h5>
     <div class="card-body">
         <!-- {{ SelectCategory }} -->
 

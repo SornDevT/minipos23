@@ -43,7 +43,37 @@
                 </div>
             </div>
         </div>
-        <div class="col-md-4">income & expense</div>
+        <div class="col-md-4">
+
+
+            <div class="card mb-4">
+                    <div class="card-body">
+                        <div class=" d-flex justify-content-between">
+                            <span> <i class='bx bx-download fs-4'></i> <br> ລາຍຮັບ </span>
+                            <span> {{ formatPrice(sum_income) }} ກີບ </span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card mb-4">
+                    <div class="card-body">
+                        <div class=" d-flex justify-content-between">
+                            <span> <i class='bx bx-trending-down fs-4'></i> <br> ລາຍຈ່າຍ </span>
+                            <span> {{  formatPrice(sum_expense)  }} ກີບ </span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card mb-4">
+                    <div class="card-body">
+                        <div class=" d-flex justify-content-between">
+                            <span> <i class='bx bxs-objects-vertical-bottom fs-4'></i> <br> ກຳໄລ </span>
+                            <span> {{ formatPrice(sum_income-sum_expense) }} ກີບ </span>
+                        </div>
+                    </div>
+                </div>
+
+        </div>
     </div>
 </template>
 <script>
@@ -103,6 +133,10 @@ export default {
         DoughnutChart,LineChart,BarChart
     },
     methods:{
+    formatPrice(value) {
+            let val = (value / 1).toFixed(0).replace(",", ".");
+            return val.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+        },
         CreatedReport(){
 
             axios.get(`api/report?dmy=${this.dmy}&month_type=${this.month_type}`,{

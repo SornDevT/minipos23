@@ -1,13 +1,13 @@
 import { createRouter,  createWebHistory } from "vue-router";
 
 import Store from "../Pages/Store.vue";
-import Category from "../Pages/Category.vue";
-import Pos from "../Pages/Pos.vue";
-import Transection from "../Pages/Transection.vue";
-import Report from "../Pages/Report.vue";
-import Page404 from "../Pages/Page404.vue";
+// import Category from "../Pages/Category.vue";
+// import Pos from "../Pages/Pos.vue";
+// import Transection from "../Pages/Transection.vue";
+// import Report from "../Pages/Report.vue";
+// import Page404 from "../Pages/Page404.vue";
 import Login from "../Pages/Login.vue";
-import Register from "../Pages/Register.vue";
+// import Register from "../Pages/Register.vue";
 
 import { useStore } from "../Store/Auth";
 
@@ -42,7 +42,7 @@ const routes = [
     {
         name: 'register',
         path: '/register',
-        component: Register
+        component: () => import('../Pages/Register.vue'),
     },
     {
         path:'/',
@@ -60,7 +60,7 @@ const routes = [
     {
         name: 'category',
         path: '/category',
-        component: Category,
+        component: () => import('../Pages/Category.vue'),
         meta:{
             middleware: [AuthMiddleware]
         }
@@ -68,7 +68,7 @@ const routes = [
     {
         name: 'pos',
         path: '/pos',
-        component: Pos,
+        component: () => import('../Pages/Pos.vue'),
         meta:{
             middleware: [AuthMiddleware]
         }
@@ -76,7 +76,7 @@ const routes = [
     {
         name: 'transection',
         path: '/transection',
-        component: Transection,
+        component: () => import('../Pages/Transection.vue'),
         meta:{
             middleware: [AuthMiddleware]
         }
@@ -84,7 +84,7 @@ const routes = [
     {
         name: 'report',
         path: '/report',
-        component: Report,
+        component: () => import('../Pages/Report.vue'),
         meta:{
             middleware: [AuthMiddleware]
         }
@@ -92,7 +92,7 @@ const routes = [
     {
         name: 'Page_404',
         path: '/:pathMatch(.*)*',
-        component: Page404
+        component: () => import('../Pages/Page404.vue')
     }
 ];
 
