@@ -45,7 +45,8 @@
       <span class="app-brand-text demo menu-text fw-bold ms-2">Sneat</span>
     </a>
 
-    <a href="javascript:void(0);" class="layout-menu-toggle menu-link text-large ms-auto">
+    <a href="javascript:void(0);" @click="HideMenu()"
+      class="layout-menu-toggle menu-link text-large ms-auto">
       <i class="bx bx-chevron-left d-block d-xl-none align-middle"></i>
     </a>
   </div>
@@ -106,7 +107,18 @@
 </template>
 <script>
 export default {
-    
+  data() {
+    return {
+      // Define any data properties if needed
+    };
+  },
+  methods: {
+    // Define any methods if needed
+    HideMenu(){
+      // remove this 'layout-navbar-fixed layout-compact layout-menu-fixed layout-menu-expanded' class from body
+      document.body.classList.remove('layout-navbar-fixed', 'layout-compact', 'layout-menu-fixed', 'layout-menu-expanded');
+    },
+  },
 }
 </script>
 <style lang="">

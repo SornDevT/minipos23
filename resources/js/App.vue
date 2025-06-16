@@ -26,13 +26,13 @@
 
 <!-- Navbar -->
 
-<nav v-if="store.getToken" class="layout-navbar container-xxl navbar-detached navbar navbar-expand-xl align-items-center bg-navbar-theme" id="layout-navbar">
+<nav v-if="store.getToken" @click="ShowMenu()" class="layout-navbar container-xxl navbar-detached navbar navbar-expand-xl align-items-center bg-navbar-theme" id="layout-navbar">
   
 
 
 
 
-  <div class="layout-menu-toggle navbar-nav align-items-xl-center me-4 me-xl-0   d-xl-none ">
+  <div class="layout-menu-toggle navbar-nav align-items-xl-center me-4 me-xl-0 d-xl-none " @click="ShowMenu()">
     <a class="nav-item nav-link px-0 me-xl-6" href="javascript:void(0)">
       <i class="icon-base bx bx-menu icon-md"></i>
     </a>
@@ -172,7 +172,7 @@
   
   
   <!-- Overlay -->
-  <div class="layout-overlay layout-menu-toggle"></div>
+  <div class="layout-overlay layout-menu-toggle" @click="HideMenu()" ></div>
   
   
 </div>
@@ -197,6 +197,14 @@ export default {
     }
   },
   methods: {
+    ShowMenu(){
+      // add this 'layout-navbar-fixed layout-compact layout-menu-fixed layout-menu-expanded' class to body
+      document.body.classList.add('layout-navbar-fixed', 'layout-compact', 'layout-menu-fixed', 'layout-menu-expanded');
+    },
+    HideMenu(){
+      // remove this 'layout-navbar-fixed layout-compact layout-menu-fixed layout-menu-expanded' class from body
+      document.body.classList.remove('layout-navbar-fixed', 'layout-compact', 'layout-menu-fixed', 'layout-menu-expanded');
+    },
     Logout() {
         axios.get('/api/logout',{
           headers: {
@@ -226,6 +234,8 @@ export default {
   
 }
 </script>
-<style lang="">
-    
+<style scoped >
+  .layout-menu {
+    transition: transform 0.3s ease-in-out;
+  }
 </style>
